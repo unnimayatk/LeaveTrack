@@ -1,0 +1,35 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="page-title">👥 Manage Users</h2>
+    <p>View and manage registered users.</p>
+
+    {% if users %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{% if user.is_superuser %} ✅ Yes {% else %} ❌ No {% endif %}</td>
+                    <td>
+                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No users found.</p>
+    {% endif %}
+</div>
+{% endblock %}

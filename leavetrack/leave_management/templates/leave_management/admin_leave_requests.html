@@ -1,0 +1,38 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">📋 All Leave Requests</h2>
+    
+    <table class="table table-bordered table-hover">
+        <thead class="table-success">
+            <tr>
+                <th>User</th>
+                <th>Leave Type</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Status</th>
+                <th>Applied On</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for leave in leave_requests %}
+            <tr>
+                <td>{{ leave.user.username }}</td>
+                <td>{{ leave.leave_type }}</td>
+                <td>{{ leave.start_date }}</td>
+                <td>{{ leave.end_date }}</td>
+                <td>{{ leave.status }}</td>
+                <td>{{ leave.applied_on }}</td>
+                <td>
+                    <a href="{% url 'update_leave_status' leave.id %}" class="btn btn-sm btn-primary">Update</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center">No leave requests found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

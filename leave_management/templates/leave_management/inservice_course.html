@@ -1,0 +1,96 @@
+{% extends 'leave_management/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4">📄 Upload Your Course Details</h3>
+
+    <!-- 🔽 Upload Form -->
+    <form method="post" enctype="multipart/form-data" class="mb-5">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div class="mb-3">
+            {{ form.course_type.label_tag }}
+            {{ form.course_type }}
+            {% for error in form.course_type.errors %}
+                <div class="text-danger">⚠️ {{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.course_name.label_tag }}
+            {{ form.course_name }}
+            {% for error in form.course_name.errors %}
+                <div class="text-danger">⚠️ {{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.start_date.label_tag }}
+            {{ form.start_date }}
+            {% for error in form.start_date.errors %}
+                <div class="text-danger">⚠️ {{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.end_date.label_tag }}
+            {{ form.end_date }}
+            {% for error in form.end_date.errors %}
+                <div class="text-danger">⚠️ {{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.certificate.label_tag }}
+            {{ form.certificate }}
+            {% for error in form.certificate.errors %}
+                <div class="text-danger">⚠️ {{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-success">Upload</button>
+    </form>
+
+    <!-- 🔽 Uploaded Courses Table -->
+    <h4>📘 Your Uploaded Courses</h4>
+    {% if courses %}
+        <table class="table table-bordered mt-3">
+            <thead class="table-success">
+                <tr>
+                    <th>Course Type</th>
+                    <th>Course Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Certificate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                    <tr>
+                        <td>{{ course.get_course_type_display }}</td>
+                        <td>{{ course.course_name }}</td>
+                        <td>{{ course.start_date|date:"F d, Y" }}</td>
+                        <td>{{ course.end_date|date:"F d, Y" }}</td>
+                        <td>
+                            {% if course.certificate %}
+                                <a href="{{ course.certificate.url }}" target="_blank" class="btn btn-sm btn-primary">View</a>
+                            {% else %}
+                                <span class="text-muted">No file</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No courses uploaded yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

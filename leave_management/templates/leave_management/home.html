@@ -1,0 +1,32 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="home-container d-flex justify-content-center align-items-center flex-column text-center py-5">
+
+    <!-- 🟢 Welcome Title -->
+    <h1 class="hero-title mb-3 fw-bold" style="color: #14532d;">Welcome to LeaveTrack</h1>
+
+    <!-- 🌿 Subtitle -->
+    <p class="hero-subtitle mb-4" style="max-width: 600px; font-size: 1.2rem; color: #4b6043;">
+        Your trusted companion for seamless and efficient leave management, exclusively designed for Kerala Police officers.
+        Apply, track, and manage your leaves with ease.
+    </p>
+
+    {% if not user.is_authenticated %}
+        <!-- ✨ Action Buttons (for unauthenticated users) -->
+        <div class="button-group d-flex gap-3">
+            <a href="{% url 'login' %}" class="btn btn-success px-4 py-2" style="background-color: #2e7d32; border: none;">
+                Login
+            </a>
+            <a href="{% url 'register' %}" class="btn btn-success px-4 py-2" style="background-color: #2e7d32; border: none;">
+                Register
+            </a>
+        </div>
+    {% else %}
+        <!-- 😊 Message for logged-in users -->
+        <p class="text-muted mt-3">You are already logged in as <strong>{{ user.username }}</strong>.</p>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-success mt-2">Go to Dashboard</a>
+    {% endif %}
+
+</div>
+{% endblock %}

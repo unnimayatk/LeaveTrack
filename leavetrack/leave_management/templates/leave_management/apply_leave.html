@@ -1,0 +1,141 @@
+{% extends 'leave_management/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-2">📌 Apply for Leave</h2>
+    <p class="text-center text-muted mb-4">Fill in the details below to request leave.</p>
+
+    {% if messages %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <form method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-sm" onsubmit="return validateDates()">
+        {% csrf_token %}
+
+        <!-- Leave Type -->
+        <div class="mb-3">
+            <label class="form-label">Leave Type</label>
+            {{ form.leave_type }}
+        </div>
+
+        <!-- Start and End Date -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Start Date</label>
+                {{ form.start_date }}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">End Date</label>
+                {{ form.end_date }}
+            </div>
+        </div>
+
+        <div id="date-error" class="alert alert-danger" style="display:none;"></div>
+        <div id="date-warning" class="alert alert-warning" style="display:none;">
+            ⚠️ Warning: You're applying for a backdated leave. Ensure it's valid.
+        </div>
+
+        
+
+        <!-- Prefixed & Suffixed -->
+        <div class="form-check form-switch mb-3" id="suffix-prefix-options" style="display: none;">
+            <label class="form-check-label me-3">Prefixed Leave</label>
+            {{ form.prefixed_leave }}
+            <label class="form-check-label ms-4 me-3">Suffixed Leave</label>
+            {{ form.suffixed_leave }}
+        </div>
+
+        <!-- Reason -->
+        <div class="mb-3">
+            <label class="form-label">Reason for Leave</label>
+            {{ form.reason }}
+        </div>
+
+        <!-- Certificate -->
+        <div class="mb-3">
+            <label class="form-label">Medical Certificate (Optional)</label>
+            {{ form.medical_certificate }}
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Submit Leave Request</button>
+    </form>
+</div>
+
+<!-- JS Script -->
+<script>
+    function validateDates() {
+        const startInput = document.getElementById("id_start_date");
+        const endInput = document.getElementById("id_end_date");
+        const start = new Date(startInput.value);
+        const end = new Date(endInput.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const dateError = document.getElementById("date-error");
+        const dateWarning = document.getElementById("date-warning");
+
+        dateError.style.display = "none";
+        dateWarning.style.display = "none";
+
+        // ❌ 1. End date must be same or after start
+        if (end < start) {
+            dateError.textContent = "❌ Error: End date cannot be before Start date.";
+            dateError.style.display = "block";
+            return false;
+        }
+
+        // ❌ 2. End date can't be before today
+        if (end < today) {
+            dateError.textContent = "❌ Error: End date cannot be before today.";
+            dateError.style.display = "block";
+            return false;
+        }
+
+        // ⚠️ 3. Warn only if start is in past (but still allow)
+        if (start < today) {
+            dateWarning.style.display = "block";
+        }
+
+        return true;
+    }
+
+    // Date validation
+    function validateDates() {
+        const startInput = document.getElementById("id_start_date");
+        const endInput = document.getElementById("id_end_date");
+        const start = new Date(startInput.value);
+        const end = new Date(endInput.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // ignore time part
+
+        const dateError = document.getElementById("date-error");
+        const dateWarning = document.getElementById("date-warning");
+
+        // Reset visibility
+        dateError.style.display = "none";
+        dateWarning.style.display = "none";
+
+        // ❌ Error if end is before start
+        if (end < start) {
+            dateError.textContent = "❌ Error: End date must be after or same as Start date.";
+            dateError.style.display = "block";
+            return false;
+        }
+
+        // ⚠️ Warning if start is before today
+        if (start < today) {
+            dateWarning.style.display = "block";
+        }
+
+        return true;
+    }
+
+</script>
+    
+    {% endblock %}

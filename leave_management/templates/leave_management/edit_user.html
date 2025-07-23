@@ -1,0 +1,13 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>🛠 Edit User - {{ user_obj.username }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Update User</button>
+        <a href="{% url 'admin_users' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

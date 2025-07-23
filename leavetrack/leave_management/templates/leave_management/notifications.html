@@ -1,0 +1,26 @@
+{% extends 'leave_management/base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>🔔 Notifications</h3>
+        <a href="{% url 'clear_notifications' %}" class="btn btn-danger btn-sm">🗑️ Clear All</a>
+    </div>
+
+    <ul class="list-group">
+        {% for notif in notifications %}
+        <li class="list-group-item {% if not notif.seen %}unseen{% endif %}">
+            {{ notif.message }}
+            <br><small class="text-muted">{{ notif.timestamp|naturaltime }}</small>
+            {% if not notif.seen %}
+                <form method="post" action="{% url 'mark_notification_read' notif.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-success float-end">Mark as read</button>
+                </form>
+            {% endif %}
+        </li>        
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

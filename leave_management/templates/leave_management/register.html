@@ -1,0 +1,84 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-box">
+        <h2 class="form-title">Register for LeaveTrack</h2>
+
+        <!-- Flash Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-box {% if message.tags == 'success' %}message-success{% elif message.tags == 'error' %}message-error{% endif %}">
+                    <span>{{ message }}</span>
+                    <button onclick="this.parentElement.style.display='none'">✖</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Non-field errors (e.g., password mismatch) -->
+            {% if form.non_field_errors %}
+                <div class="message-box message-error">
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label>Username:</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="text-danger small">
+                        {% for error in form.username.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>Email address:</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger small">
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>Password:</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="text-danger small">
+                        {% for error in form.password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>Confirm password:</label>
+                {{ form.confirm_password }}
+                {% if form.confirm_password.errors %}
+                    <div class="text-danger small">
+                        {% for error in form.confirm_password.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-custom">Register</button>
+        </form>
+
+        <p class="already-account">Already have an account? <a href="{% url 'login' %}" class="login-link">Login</a></p>
+    </div>
+</div>
+{% endblock %}  

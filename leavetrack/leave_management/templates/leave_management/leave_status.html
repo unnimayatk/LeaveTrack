@@ -1,0 +1,43 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="page-title">📌 My Leave Status</h2>
+    <p>Track your applied leaves and their current status.</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Applied On</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for leave in leave_requests %}
+            <tr>
+                <td>{{ leave.leave_type }}</td>
+                <td>{{ leave.start_date }}</td>
+                <td>{{ leave.end_date }}</td>
+                <td>{{ leave.applied_on|date:"d M Y" }}</td>
+                <td>
+                    {% if leave.status == "Approved" %}
+                        <span class="badge bg-success">Approved ✅</span>
+                    {% elif leave.status == "Rejected" %}
+                        <span class="badge bg-danger">Rejected ❌</span>
+                    {% else %}
+                        <span class="badge bg-warning">Pending ⏳</span>
+                    {% endif %}
+                </td>                
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center;">No leave applications found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

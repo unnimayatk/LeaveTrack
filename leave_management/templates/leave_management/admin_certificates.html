@@ -1,0 +1,33 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<h2>📁 All Uploaded Certificates</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Course Name</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Certificate</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cert in certificates %}
+        <tr>
+            <td>{{ cert.user.username }}</td>
+            <td>{{ cert.course_name }}</td>
+            <td>{{ cert.start_date }}</td>
+            <td>{{ cert.end_date }}</td>
+            <td>
+                {% if cert.certificate %}
+                    <a href="{{ cert.certificate.url }}" target="_blank" class="btn btn-sm btn-primary">View</a>
+                {% else %}
+                    No file
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

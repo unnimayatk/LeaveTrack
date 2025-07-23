@@ -1,0 +1,50 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">📋 All Leave Requests</h2>
+    
+    <table class="table table-bordered table-hover">
+        <thead class="table-success">
+            <tr>
+                <th>User</th>
+                <th>Leave Type</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Status</th>
+                <th>Applied On</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for leave in leave_requests %}
+            <tr>
+                <td>{{ leave.user.username }}</td>
+                <td class="text-capitalize">{{ leave.leave_type }}</td>
+                <td>{{ leave.start_date|date:"d M Y" }}</td>
+                <td>{{ leave.end_date|date:"d M Y" }}</td>
+                <td>
+                    {% if leave.status == 'approved' %}
+                        <span class="badge bg-success">Approved ✅</span>
+                    {% elif leave.status == 'rejected' %}
+                        <span class="badge bg-danger">Rejected ❌</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Pending ⏳</span>
+                    {% endif %}
+                </td>
+                <td>{{ leave.applied_on|date:"d M Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'update_leave_status' leave.id %}" class="btn btn-sm btn-primary">
+                        Update
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-muted">No leave requests found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

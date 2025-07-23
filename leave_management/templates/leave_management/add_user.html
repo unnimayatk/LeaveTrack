@@ -1,0 +1,13 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>➕ Add New User</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Create User</button>
+        <a href="{% url 'admin_users' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="login-card">
+        <div class="intro-text text-center">
+            <h1>Welcome to LeaveTrack</h1>
+            <p>Your digital leave management system — built for police personnel with simplicity, transparency, and ease.</p>
+        </div>
+
+        <!-- ✅ Flash Messages - Fixed Full Width & Styled -->
+        {% if messages %}
+        <div class="message-container mb-3">
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- 🔑 Login Form -->
+        <form method="post" class="form-container">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="text" class="form-control text-center" name="username" placeholder="Username" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control text-center" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn-custom w-100">Login</button>
+        </form>
+        <div class="text-center mt-3">
+            <span class="text-muted">
+                <a href="{% url 'register' %}" class="text-muted me-3">Don't have an account? Register here</a>
+                |
+                <a href="{% url 'password_reset' %}" class="text-muted ms-3">Forgot Password?</a>
+            </span>
+        </div>        
+        
+      </div>
+</div>
+{% endblock %}

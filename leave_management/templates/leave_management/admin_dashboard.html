@@ -1,0 +1,40 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">🛠️ Admin Dashboard</h2>
+    <p class="text-center text-muted">Manage leave requests and users.</p>  
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card text-white bg-primary mb-3 shadow">
+                <div class="card-body">
+                    <h4 class="card-title">📜 Pending Leave Requests</h4>
+                    <p class="card-text">Review and approve pending leave applications.</p>
+                    <a href="{% url 'admin_leave_requests' %}" class="btn btn-light">Manage Leave Requests</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card text-white bg-success mb-3 shadow">
+                <div class="card-body">
+                    <h4 class="card-title">👥 Manage Users</h4>
+                    <p class="card-text">View and manage users in the system.</p>
+                    <a href="{% url 'admin_users' %}" class="btn btn-light">View Users</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card text-white bg-success mb-3 shadow">
+                <div class="card-body">
+                    <h4 class="card-title">📁 Manage Certificates</h4>
+                    <p class="card-text">View, edit or delete uploaded course certificates.</p>
+                    <a href="{% url 'admin_certificates' %}" class="btn btn-light">Manage Certificates</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'leave_management/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4">📄 Upload In-Service Course</h3>
+
+    <form method="post" enctype="multipart/form-data" class="mb-5">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Upload</button>
+    </form>
+
+    <h4>📘 Your Uploaded Courses</h4>
+    {% if courses %}
+        <table class="table table-bordered mt-3">
+            <thead class="table-success">
+                <tr>
+                    <th>Course Type</th>
+                    <th>Course Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Certificate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                    <tr>
+                        <td>{{ course.course_type }}</td>
+                        <td>{{ course.course_name }}</td>
+                        <td>{{ course.start_date|date:"F d, Y" }}</td>
+                        <td>{{ course.end_date|date:"F d, Y" }}</td>
+                        <td>
+                            {% if course.certificate %}
+                                <a href="{{ course.certificate.url }}" target="_blank" class="btn btn-sm btn-primary">View</a>
+                            {% else %}
+                                <span class="text-muted">No file</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No courses uploaded yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

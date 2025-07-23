@@ -1,0 +1,133 @@
+{% extends 'leave_management/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-2">📌 Apply for Leave</h2>
+    <p class="text-center text-muted mb-4">Fill in the details below to request leave.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-sm" onsubmit="return validateDates();">
+        {% csrf_token %}
+
+        <!-- Leave Type -->
+        <div class="mb-3">
+            <label for="id_leave_type" class="form-label">Leave Type</label>
+            {{ form.leave_type }}
+        </div>
+
+        <!-- Dates -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="id_start_date" class="form-label">Start Date</label>
+                {{ form.start_date }}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="id_end_date" class="form-label">End Date</label>
+                {{ form.end_date }}
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div id="date-error" class="alert alert-danger" style="display: none;"></div>
+        <div id="date-warning" class="alert alert-warning" style="display: none;">
+            ⚠️ You're applying for a backdated leave. Ensure it's valid.
+        </div>
+
+        <!-- Prefixed/Suffixed Leave (only for eligible types) -->
+        <div id="suffix-prefix-section" class="mb-3" style="display: none;">
+            <p><strong>Leave Adjustment:</strong> Adjust leave with holidays around the requested period.</p>
+
+            <div class="form-check form-switch">
+                <input type="checkbox" name="prefixed_leave" id="prefixed_leave" class="form-check-input" {% if form.prefixed_leave.value %}checked{% endif %}>
+                <label for="prefixed_leave" class="form-check-label">Prefixed Leave</label>
+                <small class="form-text text-muted">Include holidays before the start date.</small>
+            </div>
+
+            <div class="form-check form-switch mt-2">
+                <input type="checkbox" name="suffixed_leave" id="suffixed_leave" class="form-check-input" {% if form.suffixed_leave.value %}checked{% endif %}>
+                <label for="suffixed_leave" class="form-check-label">Suffixed Leave</label>
+                <small class="form-text text-muted">Include holidays after the end date.</small>
+            </div>
+        </div>
+
+        <!-- Reason -->
+        <div class="mb-3">
+            <label for="id_reason" class="form-label">Reason for Leave</label>
+            {{ form.reason }}
+        </div>
+
+        <!-- Medical Certificate -->
+        <div class="mb-3">
+            <label for="id_medical_certificate" class="form-label">Medical Certificate (Optional)</label>
+            {{ form.medical_certificate }}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-success w-100">Submit Leave Request</button>
+    </form>
+</div>
+
+<!-- JavaScript -->
+<script>
+    function validateDates() {
+        const start = new Date(document.getElementById("id_start_date").value);
+        const end = new Date(document.getElementById("id_end_date").value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const errorBox = document.getElementById("date-error");
+        const warningBox = document.getElementById("date-warning");
+
+        errorBox.style.display = "none";
+        warningBox.style.display = "none";
+
+        if (isNaN(start) || isNaN(end)) {
+            errorBox.textContent = "❌ Please enter valid dates.";
+            errorBox.style.display = "block";
+            return false;
+        }
+
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+
+        if (end < start) {
+            errorBox.textContent = "❌ Error: End date cannot be before Start date.";
+            errorBox.style.display = "block";
+            return false;
+        }
+
+        if (end < today) {
+            errorBox.textContent = "❌ Error: End date cannot be before today.";
+            errorBox.style.display = "block";
+            return false;
+        }
+
+        if (start < today) {
+            warningBox.style.display = "block";
+        }
+
+        return true;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const leaveType = document.getElementById("id_leave_type");
+        const suffixPrefix = document.getElementById("suffix-prefix-section");
+
+        const allowedTypes = ["earned", "half_pay"];  // Match your DB field values exactly
+
+        function toggleSuffixPrefix() {
+            const selected = leaveType.value.toLowerCase();
+            suffixPrefix.style.display = allowedTypes.includes(selected) ? "block" : "none";
+        }
+
+        leaveType.addEventListener("change", toggleSuffixPrefix);
+        toggleSuffixPrefix();  // On page load
+    });
+</script>
+{% endblock %}

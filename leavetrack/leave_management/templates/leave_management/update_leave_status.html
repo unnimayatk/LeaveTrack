@@ -1,0 +1,38 @@
+{% extends 'leave_management/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow p-4 rounded" style="max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0;">
+        <h3 class="text-center mb-4" style="color: #2d6a4f;">📝 Update Leave Status</h3>
+
+        <div class="mb-3">
+            <strong>👤 Officer:</strong> {{ leave.user.username }}<br>
+            <strong>📋 Leave Type:</strong> {{ leave.leave_type }}<br>
+            <strong>📅 From:</strong> {{ leave.start_date }}<br>
+            <strong>📅 To:</strong> {{ leave.end_date }}<br>
+            <strong>📝 Reason:</strong> {{ leave.reason }}<br>
+            {% if leave.medical_certificate %}
+                <strong>📎 Medical Certificate:</strong> 
+                <a href="{{ leave.medical_certificate.url }}" target="_blank" style="color: #1b4332;">View Document</a><br>
+            {% endif %}
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label for="status" class="form-label"><strong>📌 Change Status:</strong></label>
+                <select name="status" class="form-control" required>
+                    <option value="">-- Select --</option>
+                    <option value="Approved" {% if leave.status == 'Approved' %}selected{% endif %}>✅ Approve</option>
+                    <option value="Rejected" {% if leave.status == 'Rejected' %}selected{% endif %}>❌ Reject</option>
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-success px-4">Update</button>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
